@@ -1,12 +1,30 @@
 const inquirer = require('inquirer');
 const colors = require('colors');
-// fs is a Node standard library package for reading and writing files
 const fs = require('fs');
-const badges = require(`.generateBadge`);
+
+function generatelicense(licensing) {
+    if (licensing === 'None') {
+        return '';
+    }
+    if (licensing === 'MIT') {
+        return '[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)';
+    }
+    if (licensing === 'Apache-2.0') {
+        return '[![License: Apache](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)';
+    }
+    if (licensing === 'PostgreSQL') {
+        return '[![License: PostgreSQL](https://img.shields.io/badge/License-PostgreSQL-blue.svg)](https://opensource.org/licenses/PostgreSQL)';
+    }
+}
 
 function createREADME() {
     inquirer
         .prompt([
+            {
+                type: "input",
+                message: "What is this repo Named (exact)?",
+                name: "repoName",
+            },
             {
                 type: "input",
                 message: "What is this README's Title?",
@@ -19,11 +37,6 @@ function createREADME() {
             },
             {
                 type: "input",
-                message: "Provide a Table of Contents",
-                name: "contents",
-            },
-            {
-                type: "input",
                 message: "Describe the installation process.",
                 name: "installation",
             },
@@ -33,14 +46,14 @@ function createREADME() {
                 name: "usage",
             },
             {
-                type: 'checkbox',
-                message: colors.brightMagenta('What is your preferred method of communication?'),
-                name: 'stack',
-                choices: ['HTML', 'CSS', 'JavaScript', 'PostgreSQL']
+                type: 'list',
+                message: colors.brightMagenta('What licensing did you use?'),
+                name: 'licensing',
+                choices: ['None', 'MIT', 'Apache-2.0', 'PostgreSQL']
             },
             {
                 type: "input",
-                message: "What are the name of the Contributors?",
+                message: "What are the names of the Contributors?",
                 name: "contributors",
             },
             {
@@ -59,14 +72,23 @@ function createREADME() {
                 name: "emailAdd",
             },
         ]).then((data) => {
+            const licenseBadge = generatelicense(data.licensing);
+
             const readmeContent =
 `# ${data.title}
+
+${licenseBadge}
 
 ## Description
 ${data.description}
 
 ## Table of Contents
-${data.contents}
+- [Installation](#installation)
+- [Usage](#usage)
+- [Licensing](#licensing)
+- [Contributors](#contributors)
+- [Testing](#testing)
+- [Questions](#questions)
 
 ## Installation
 ${data.installation}
@@ -74,8 +96,8 @@ ${data.installation}
 ## Usage
 ${data.usage}
 
-## Technologies Used
-${data.stack.join(', ')}
+## Licensing
+${licenseBadge}
 
 ## Contributors
 ${data.contributors}
@@ -85,11 +107,11 @@ ${data.testing}
 
 ## Questions
 Any lingering questions? Please contact me:
- GitHub: [${data.gitHubID}](https://github.com/${data.gitHubID})
- Email: ${data.emailAdd}
+- GitHub: [${data.gitHubID}](https://github.com/${data.gitHubID})
+- Email: ${data.emailAdd}
 `;
 
-            fs.writeFile('README.md', readmeContent, (err) =>
+            fs.writeFile('../README.md', readmeContent, (err) =>
                 err ? console.error(err) : console.log('README.md created successfully!')
             );
         });
