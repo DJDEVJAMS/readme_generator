@@ -20,11 +20,11 @@ function generatelicense(licensing) {
 function createREADME() {
     inquirer
         .prompt([
-            {
-                type: "input",
-                message: "What is this repo Named (exact)?",
-                name: "repoName",
-            },
+            // {
+            //     type: "input",
+            //     message: "What is this repo Named (exact)?",
+            //     name: "repoName",
+            // },
             {
                 type: "input",
                 message: "What is this README's Title?",
