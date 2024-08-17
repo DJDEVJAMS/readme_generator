@@ -1,69 +1,89 @@
 // Import the inquirer module for prompting user input in the command line.
-const inquirer = require('inquirer');
+const inquirer = require("inquirer");
 
 // Import the colors module to add color to the console output.
-const colors = require('colors');
+const colors = require("colors");
 
 // Import the fs (file system) module to interact with the file system.
-const fs = require('fs');
+const fs = require("fs");
 
 // Function to generate the license badge based on the user's choice.
 function generatelicense(licensing) {
-    // If the user selects 'None', return an empty string.
-    if (licensing === 'None') {
-        return '';
-    }
-    // If the user selects 'MIT', return the MIT license badge.
-    if (licensing === 'MIT') {
-        return '[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)';
-    }
-    // If the user selects 'Apache-2.0', return the Apache 2.0 license badge.
-    if (licensing === 'Apache-2.0') {
-        return '[![License: Apache](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)';
-    }
-    // If the user selects 'PostgreSQL', return the PostgreSQL license badge.
-    if (licensing === 'PostgreSQL') {
-        return '[![License: PostgreSQL](https://img.shields.io/badge/License-PostgreSQL-blue.svg)](https://opensource.org/licenses/PostgreSQL)';
-    }
-    // Add more license options as needed.
+  // If the user selects 'None', return an empty string.
+  if (licensing === "None") {
+    return "";
+  }
+  // If the user selects 'MIT', return the MIT license badge.
+  if (licensing === "MIT") {
+    return "[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)";
+  }
+  // If the user selects 'Apache-2.0', return the Apache 2.0 license badge.
+  if (licensing === "Apache-2.0") {
+    return "[![License: Apache](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)";
+  }
+  // If the user selects 'PostgreSQL', return the PostgreSQL license badge.
+  if (licensing === "PostgreSQL") {
+    return "[![License: PostgreSQL](https://img.shields.io/badge/License-PostgreSQL-blue.svg)](https://opensource.org/licenses/PostgreSQL)";
+  }
+  // Add more license options as needed.
 }
 
 // Function to prompt the user for input and generate the README file.
 function createREADME() {
-    // Use inquirer to prompt the user with a series of questions.
-    inquirer.prompt([
-        {
-            type: 'input',
-            name: 'title',
-            message: 'What is the title of your project?',
+  // Use inquirer to prompt the user with a series of questions.
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "title",
+        message: "What is the title of your project?",
+      },
+      {
+        type: "input",
+        name: "description",
+        message: "Provide a description of your project (press Ctrl+D to finish):",
+        validate: function (input) {
+          if (input.trim() === "") {
+            return "Description cannot be empty.";
+          }
+          return true;
         },
-        {
-            type: 'input',
-            name: 'description',
-            message: 'Provide a description of your project:',
+        filter: function (input) {
+          return input.replace(/\n/g, "\n");
         },
-        {
-            type: 'input',
-            name: 'installation',
-            message: 'Provide the installation instructions:',
+      },
+      {
+        type: "input",
+        name: "installation",
+        message: "Provide the installation instructions (press Ctrl+D to finish):",
+        validate: function (input) {
+          if (input.trim() === "") {
+            return "Installation instructions cannot be empty.";
+          }
+          return true;
         },
-        {
-            type: 'input',
-            name: 'usage',
-            message: 'Provide the usage information:',
+        filter: function (input) {
+          return input.replace(/\n/g, "\n");
         },
-        {
-            type: 'list',
-            name: 'license',
-            message: 'Choose a license for your project:',
-            choices: ['None', 'MIT', 'Apache-2.0', 'PostgreSQL'],
-        },
-    ]).then((data) => {
-        // Generate the license badge based on the user's choice.
-        const licenseBadge = generatelicense(data.license);
+      },
+      {
+        type: "input",
+        name: "usage",
+        message: "Provide the usage information:",
+      },
+      {
+        type: "list",
+        name: "license",
+        message: "Choose a license for your project:",
+        choices: ["None", "MIT", "Apache-2.0", "PostgreSQL"],
+      },
+    ])
+    .then((data) => {
+      // Generate the license badge based on the user's choice.
+      const licenseBadge = generatelicense(data.license);
 
-        // Create the content for the README file using template literals.
-        const readmeContent = `
+      // Create the content for the README file using template literals.
+      const readmeContent = `
 # ${data.title}
 
 ## Description
@@ -84,12 +104,18 @@ ${data.usage}
 ${licenseBadge}
 `;
 
-        // Write the generated content to a README.md file.
-        fs.writeFile('README.md', readmeContent, (err) => {
-            // Check if there is an error. If there is, log the error to the console.
-            // Otherwise, log a success message indicating that the README.md file was created successfully.
-            err ? console.error(err) : console.log('README.md created successfully!'.green);
-        });
+      // Construct the file path for the README.md file.
+      const path = require('path');
+      const filePath = path.join(__dirname, (`${data.title}`+ " "+"README.md"));
+
+      // Write the generated content to a README.md file.
+      fs.writeFile(filePath, readmeContent, (err) => {
+        // Check if there is an error. If there is, log the error to the console.
+        // Otherwise, log a success message indicating that the README.md file was created successfully.
+        err
+          ? console.error(err)
+          : console.log("README.md created successfully!".green);
+      });
     });
 }
 
