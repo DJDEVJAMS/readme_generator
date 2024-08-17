@@ -77,6 +77,7 @@ function createREADME() {
         message: "Choose a license for your project:",
         choices: ["None", "MIT", "Apache-2.0", "PostgreSQL"],
       },
+      
     ])
     .then((data) => {
       // Generate the license badge based on the user's choice.
