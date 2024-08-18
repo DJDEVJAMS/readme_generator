@@ -41,30 +41,12 @@ function createREADME() {
       {
         type: "input",
         name: "description",
-        message: "Provide a description of your project (press Ctrl+D to finish):",
-        validate: function (input) {
-          if (input.trim() === "") {
-            return "Description cannot be empty.";
-          }
-          return true;
+        message: "Provide a description of your project:",
         },
-        filter: function (input) {
-          return input.replace(/\n/g, "\n");
-        },
-      },
       {
         type: "input",
         name: "installation",
-        message: "Provide the installation instructions (press Ctrl+D to finish):",
-        validate: function (input) {
-          if (input.trim() === "") {
-            return "Installation instructions cannot be empty.";
-          }
-          return true;
-        },
-        filter: function (input) {
-          return input.replace(/\n/g, "\n");
-        },
+        message: "Provide the installation instructions:",
       },
       {
         type: "input",
@@ -77,15 +59,53 @@ function createREADME() {
         message: "Choose a license for your project:",
         choices: ["None", "MIT", "Apache-2.0", "PostgreSQL"],
       },
-      
-    ])
-    .then((data) => {
-      // Generate the license badge based on the user's choice.
-      const licenseBadge = generatelicense(data.license);
+      {
+        type: "input",
+        message: "What are the names of the Contributors?",
+        name: "contributors",
+    },
+    {
+        type: "input",
+        message: "What was the result of testing?",
+        name: "testing",
+    },
+    {
+        type: "input",
+        message: "What is your GitHub ID?",
+        name: "gitHubID",
+    },
+    {
+        type: "input",
+        message: "What is your email address?",
+        name: "emailAdd",
+    },
+    {
+        type: "input",
+        message: "What are the names of the Contributors?",
+        name: "contributors",
+    },
+    {
+        type: "input",
+        message: "What was the result of testing?",
+        name: "testing",
+    },
+    {
+        type: "input",
+        message: "What is your GitHub ID?",
+        name: "gitHubID",
+    },
+    {
+        type: "input",
+        message: "What is your email address?",
+        name: "emailAdd",
+    }
+]).then((data) => {
+    const licenseBadge = generatelicense(data.licensing);
 
-      // Create the content for the README file using template literals.
-      const readmeContent = `
-# ${data.title}
+    const readmeContent =
+`# ${data.title}
+
+${licenseBadge}
 
 ## Description
 ${data.description}
@@ -93,7 +113,10 @@ ${data.description}
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
-- [License](#license)
+- [Licensing](#licensing)
+- [Contributors](#contributors)
+- [Testing](#testing)
+- [Questions](#questions)
 
 ## Installation
 ${data.installation}
@@ -101,8 +124,19 @@ ${data.installation}
 ## Usage
 ${data.usage}
 
-## License
+## Licensing
 ${licenseBadge}
+
+## Contributors
+${data.contributors}
+
+## Testing
+${data.testing}
+
+## Questions
+Any lingering questions? Please contact me:
+- GitHub: [${data.gitHubID}](https://github.com/${data.gitHubID})
+- Email: ${data.emailAdd}
 `;
 
       // Construct the file path for the README.md file.
