@@ -15,15 +15,15 @@ function generatelicense(licensing) {
   }
   // If the user selects 'MIT', return the MIT license badge.
   if (licensing === "MIT") {
-    return "[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)";
+    return "![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)";
   }
   // If the user selects 'Apache-2.0', return the Apache 2.0 license badge.
   if (licensing === "Apache-2.0") {
-    return "[![License: Apache](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)";
+    return "![License: Apache](https://img.shields.io/badge/License-Apache%202.0-blue.svg)";
   }
   // If the user selects 'PostgreSQL', return the PostgreSQL license badge.
   if (licensing === "PostgreSQL") {
-    return "[![License: PostgreSQL](https://img.shields.io/badge/License-PostgreSQL-blue.svg)](https://opensource.org/licenses/PostgreSQL)";
+    return "![License: PostgreSQL](https://img.shields.io/badge/License-PostgreSQL-blue.svg)";
   }
   // Add more license options as needed.
 }
@@ -100,7 +100,7 @@ function createREADME() {
         name: "emailAdd",
     }
 ]).then((data) => {
-    const licenseBadge = generatelicense(data.licensing);
+    const licenseBadge = generatelicense(data.license);
 
     const readmeContent =
 `# ${data.title}
